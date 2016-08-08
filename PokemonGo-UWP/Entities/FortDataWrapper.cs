@@ -44,6 +44,12 @@ namespace PokemonGo_UWP.Entities
             OnPropertyChanged(nameof(Longitude));
         }
 
+        public void TriggerRefresh()
+        {
+            //trigger an event on a root object itself, to refres the Image binding on map.
+            OnPropertyChanged("");
+        }
+
         /// <summary>
         /// HACK - this should fix Pokestop floating on map
         /// </summary>

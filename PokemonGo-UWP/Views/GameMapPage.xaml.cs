@@ -5,11 +5,14 @@ using Windows.UI.Xaml.Input;
 using PokemonGo_UWP.Utils;
 using Template10.Common;
 using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
 using Windows.UI.Xaml.Controls.Maps;
 using Windows.UI.Xaml.Navigation;
 using PokemonGo.RocketAPI;
+using PokemonGo_UWP.Entities;
+using POGOProtos.Map.Fort;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -123,6 +126,10 @@ namespace PokemonGo_UWP.Views
 						if (SettingsService.Instance.IsAutoRotateMapEnabled && position.Coordinate.Heading != null && !double.IsNaN(position.Coordinate.Heading.Value))
 						{
 							GameMapControl.Heading = position.Coordinate.Heading.Value;
+                }
+                foreach (var pokeStop in this.NearbyPokestops.ItemsSource as ObservableCollection<FortDataWrapper>)
+                {
+                    pokeStop.TriggerRefresh();
 						}
 					}
 					else
