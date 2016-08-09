@@ -231,7 +231,11 @@ namespace PokemonGo_UWP.ViewModels
                         break;
                     case FortSearchResponse.Types.Result.InventoryFull:
                         // Items can't be gathered because player's inventory is full, there's nothing that we can do
-                        // TODO: do something here!
+                        // The cooldown timestamp can be refreshed for a more responsive lilac color
+
+                        CurrentPokestop.SearchInfo.CooldownCompleteTimestampMs =
+                            CurrentSearchResponse.CooldownCompleteTimestampMs;
+
                         SearchInventoryFull?.Invoke(this, null);
                         break;
                     default:
