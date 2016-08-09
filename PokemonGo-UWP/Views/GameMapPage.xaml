@@ -209,7 +209,7 @@
 				</maps:MapItemsControl.ItemTemplate>
 			</maps:MapItemsControl>
 
-			<maps:MapItemsControl ItemsSource="{Binding NearbyPokestops}">
+			<maps:MapItemsControl x:Name="NearbyPokestops" ItemsSource="{Binding NearbyPokestops}">
 				<maps:MapItemsControl.ItemTemplate>
 					<DataTemplate x:DataType="entities:FortDataWrapper">
 						<Button Style="{ThemeResource ImageButtonStyle}"

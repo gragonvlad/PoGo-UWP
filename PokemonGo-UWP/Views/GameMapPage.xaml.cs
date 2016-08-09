@@ -126,10 +126,10 @@ namespace PokemonGo_UWP.Views
 						if (SettingsService.Instance.IsAutoRotateMapEnabled && position.Coordinate.Heading != null && !double.IsNaN(position.Coordinate.Heading.Value))
 						{
 							GameMapControl.Heading = position.Coordinate.Heading.Value;
-                }
-                foreach (var pokeStop in this.NearbyPokestops.ItemsSource as ObservableCollection<FortDataWrapper>)
-                {
-                    pokeStop.TriggerRefresh();
+                        }
+                        foreach (var pokeStop in this.NearbyPokestops.ItemsSource as ObservableCollection<FortDataWrapper>)
+                        {
+                            pokeStop.TriggerRefresh();
 						}
 					}
 					else
