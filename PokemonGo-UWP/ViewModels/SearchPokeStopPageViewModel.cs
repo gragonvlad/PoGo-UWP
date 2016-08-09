@@ -37,21 +37,21 @@ namespace PokemonGo_UWP.ViewModels
             if (suspensionState.Any())
             {
                 // Recovering the state
-                CurrentPokestop = (FortDataWrapper) suspensionState[nameof(CurrentPokestop)];
-                CurrentPokestopInfo = (FortDetailsResponse) suspensionState[nameof(CurrentPokestopInfo)];
-                CurrentSearchResponse = (FortSearchResponse) suspensionState[nameof(CurrentSearchResponse)];
+                CurrentPokestop = (FortDataWrapper)suspensionState[nameof(CurrentPokestop)];
+                CurrentPokestopInfo = (FortDetailsResponse)suspensionState[nameof(CurrentPokestopInfo)];
+                CurrentSearchResponse = (FortSearchResponse)suspensionState[nameof(CurrentSearchResponse)];
             }
             else if (parameter is bool)
             {
                 // Navigating from game page, so we need to actually load the Pokestop                  
                 Busy.SetBusy(true, "Loading Pokestop");
-                CurrentPokestop = (FortDataWrapper)NavigationHelper.NavigationState[nameof(CurrentPokestop)];                
+                CurrentPokestop = (FortDataWrapper)NavigationHelper.NavigationState[nameof(CurrentPokestop)];
                 NavigationHelper.NavigationState.Remove(nameof(CurrentPokestop));
-                Logger.Write($"Searching {CurrentPokestop.Id}");                
+                Logger.Write($"Searching {CurrentPokestop.Id}");
                 CurrentPokestopInfo = await GameClient.GetFort(CurrentPokestop.Id, CurrentPokestop.Latitude, CurrentPokestop.Longitude);
                 Busy.SetBusy(false);
                 // If timeout is expired we can go to to pokestop page          
-                if (CurrentPokestop.CooldownCompleteTimestampMs >= DateTime.UtcNow.ToUnixTime())
+                if (CurrentPokestop.SearchInfo.CooldownCompleteTimestampMs >= DateTime.UtcNow.ToUnixTime())
                 {
                     // Timeout is not expired yet, player can't get items from the fort
                     SearchInCooldown?.Invoke(null, null);
@@ -195,8 +195,8 @@ namespace PokemonGo_UWP.ViewModels
                 Busy.SetBusy(true, "Searching PokeStop");
                 Logger.Write($"Searching {CurrentPokestopInfo.Name} [ID = {CurrentPokestop.Id}]");
                 CurrentSearchResponse =
-                    await GameClient.SearchFort(CurrentPokestop.Id, CurrentPokestop.Latitude, CurrentPokestop.Longitude);                
-                Busy.SetBusy(false);                                
+                    await GameClient.SearchFort(CurrentPokestop.Id, CurrentPokestop.Latitude, CurrentPokestop.Longitude);
+                Busy.SetBusy(false);
                 switch (CurrentSearchResponse.Result)
                 {
                     case FortSearchResponse.Types.Result.NoResultSet:
@@ -207,9 +207,12 @@ namespace PokemonGo_UWP.ViewModels
                         var tmpAwardedItems = CurrentSearchResponse.ItemsAwarded.GroupBy(item => item.ItemId);
                         foreach (var tmpAwardedItem in tmpAwardedItems)
                         {
-                            var tmpItem = tmpAwardedItem.GroupBy(item => item.ItemId);                            
+                            var tmpItem = tmpAwardedItem.GroupBy(item => item.ItemId);
                             AwardedItems.Add(new ItemAward() { ItemId = tmpItem.First().First().ItemId, ItemCount = tmpItem.First().Count() });
                         }
+
+                        CurrentPokestop.SearchInfo.CooldownCompleteTimestampMs =
+                            CurrentSearchResponse.CooldownCompleteTimestampMs;
                         Logger.Write("Searching Pokestop success");
                         SearchSuccess?.Invoke(this, null);
                         // Restarts map timer

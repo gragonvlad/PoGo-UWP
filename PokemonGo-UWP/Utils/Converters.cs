@@ -510,11 +510,11 @@ namespace PokemonGo_UWP.Utils
 
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var pokestop = (FortDataWrapper)value;            
-            var distance = GeoExtensions.GeoAssist.CalculateDistanceBetweenTwoGeoPoints(pokestop.Geoposition,
+            var searchInfo = (FortDataWrapper.SearchData)value;
+            var distance = GeoExtensions.GeoAssist.CalculateDistanceBetweenTwoGeoPoints(searchInfo.Geoposition,
                 GameClient.Geoposition.Coordinate.Point);
 
-            var mode = pokestop.CooldownCompleteTimestampMs < DateTime.UtcNow.ToUnixTime() ? "" : "_inactive";
+            var mode = searchInfo.CooldownCompleteTimestampMs < DateTime.UtcNow.ToUnixTime() ? "" : "_inactive";
 
             if (distance > GameClient.GameSetting.FortSettings.InteractionRangeMeters)
                 return new Uri($"ms-appx:///Assets/Icons/pokestop_far{mode}.png");

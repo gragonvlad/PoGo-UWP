@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Google.Protobuf;
@@ -13,22 +15,73 @@ namespace PokemonGo_UWP.Entities
 {
     public class FortDataWrapper : IUpdatable<FortData>, INotifyPropertyChanged
     {
+        //Geopoint, long>(this.Geoposition, this.CooldownCompleteTimestampMs
+        public class SearchData : INotifyPropertyChanged
+        {
+            private Geopoint geoposition;
+
+            public Geopoint Geoposition
+            {
+                get
+                {
+                    return geoposition;
+                }
+                set
+                {
+                    geoposition = value;
+                    OnPropertyChanged(nameof(Geoposition));
+                }
+            }
+
+            private long cooldownCompleteTimestampMs;
+
+            public long CooldownCompleteTimestampMs
+            {
+                get
+                {
+                    return cooldownCompleteTimestampMs;
+                }
+                set
+                {
+                    cooldownCompleteTimestampMs = value;
+                    OnPropertyChanged(nameof(CooldownCompleteTimestampMs));
+                }
+            }
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            public SearchData(Geopoint geoposition, long cooldownCompleteTimestampMs)
+            {
+                this.Geoposition = geoposition;
+                this.CooldownCompleteTimestampMs = cooldownCompleteTimestampMs;
+            }
+
+            protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
         private FortData _fortData;
+        private readonly SearchData _searchData;
 
         public FortDataWrapper(FortData fortData)
         {
             _fortData = fortData;
-            Geoposition = new Geopoint(new BasicGeoposition { Latitude = _fortData.Latitude, Longitude = _fortData.Longitude });
+            _searchData = new SearchData(new Geopoint(new BasicGeoposition { Latitude = _fortData.Latitude, Longitude = _fortData.Longitude }), fortData.CooldownCompleteTimestampMs);
+            _searchData.PropertyChanged += (s, e) => OnPropertyChanged(nameof(SearchInfo));
         }
 
         public void Update(FortData update)
         {
             _fortData = update;
+            //_searchData.Geoposition =
+            //    new Geopoint(new BasicGeoposition { Latitude = _fortData.Latitude, Longitude = _fortData.Longitude });
+            _searchData.CooldownCompleteTimestampMs = _fortData.CooldownCompleteTimestampMs;
 
             OnPropertyChanged(nameof(Id));
             OnPropertyChanged(nameof(Type));
             OnPropertyChanged(nameof(ActiveFortModifier));
-            OnPropertyChanged(nameof(CooldownCompleteTimestampMs));
             OnPropertyChanged(nameof(Enabled));
             OnPropertyChanged(nameof(GuardPokemonId));
             OnPropertyChanged(nameof(GymPoints));
@@ -38,7 +91,6 @@ namespace PokemonGo_UWP.Entities
             OnPropertyChanged(nameof(OwnedByTeam));
             OnPropertyChanged(nameof(RenderingType));
             OnPropertyChanged(nameof(Sponsor));
-            OnPropertyChanged(nameof(Geoposition));
             OnPropertyChanged(nameof(GuardPokemonCp));
             OnPropertyChanged(nameof(Latitude));
             OnPropertyChanged(nameof(Longitude));
@@ -46,8 +98,8 @@ namespace PokemonGo_UWP.Entities
 
         public void TriggerRefresh()
         {
-            //trigger an event on a root object itself, to refres the Image binding on map.
-            OnPropertyChanged("");
+            //trigger an event on a root object itself, to refresh the Image binding on map.
+            OnPropertyChanged(nameof(SearchInfo));
         }
 
         /// <summary>
@@ -76,7 +128,7 @@ namespace PokemonGo_UWP.Entities
 
         public ByteString ActiveFortModifier => _fortData.ActiveFortModifier;
 
-        public long CooldownCompleteTimestampMs => _fortData.CooldownCompleteTimestampMs;
+        //public long CooldownCompleteTimestampMs => _fortData.CooldownCompleteTimestampMs;
 
         public bool Enabled => _fortData.Enabled;
 
@@ -98,13 +150,15 @@ namespace PokemonGo_UWP.Entities
 
         public FortSponsor Sponsor => _fortData.Sponsor;
 
-        public Geopoint Geoposition { get; set; }
+        //public Geopoint Geoposition { get; set; }
 
         public int GuardPokemonCp => _fortData.GuardPokemonCp;
 
         public double Latitude => _fortData.Latitude;
 
         public double Longitude => _fortData.Longitude;
+
+        public SearchData SearchInfo => _searchData;
 
         #endregion
 
