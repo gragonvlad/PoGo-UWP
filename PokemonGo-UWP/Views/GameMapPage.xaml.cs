@@ -127,17 +127,17 @@ namespace PokemonGo_UWP.Views
 						{
 							GameMapControl.Heading = position.Coordinate.Heading.Value;
                         }
-                        foreach (var pokeStop in this.NearbyPokestops.ItemsSource as ObservableCollection<FortDataWrapper>)
-                        {
-                            pokeStop.TriggerRefresh();
-						}
 					}
 					else
 					{
 						//Position was changed by user, activate button to go back to automatic mode
 						ReactivateMapAutoUpdate.Visibility = Visibility.Visible;
 					}
-				}
+                    foreach (var pokeStop in this.NearbyPokestops.ItemsSource as ObservableCollection<FortDataWrapper>)
+                    {
+                        pokeStop.TriggerRefresh();
+                    }
+                }
 			});
 		}
 
