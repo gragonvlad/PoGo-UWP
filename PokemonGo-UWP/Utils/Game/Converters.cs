@@ -37,7 +37,7 @@ namespace PokemonGo_UWP.Utils
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             var zoomLevel = (double)value;
-            var zoomFactor = int.Parse((string)parameter);
+            var zoomFactor = double.Parse((string)parameter);
             return System.Convert.ToInt32(Math.Ceiling(zoomFactor * (5.02857 * zoomLevel - 53.2571)));
         }
 
@@ -1072,21 +1072,20 @@ namespace PokemonGo_UWP.Utils
 
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var teamColor = (TeamColor)value;
-            var resourceUriString = "ms-appx:///Assets/Icons/hint_gym";
+            var status = (GymDataStatus)value;
+            var resourceUriString = "ms-appx:///Assets/Icons/gym_";
 
-            switch (teamColor)
+            switch (status.OwnedByTeam)
             {
-                case TeamColor.Red:
-                    return new Uri(resourceUriString + "_red.png");
-                case TeamColor.Yellow:
-                    return new Uri(resourceUriString + "_yellow.png");
                 case TeamColor.Blue:
-                    return new Uri(resourceUriString + "_blue.png");
+                    return new Uri(resourceUriString + "blue.png");
+                case TeamColor.Red:
+                    return new Uri(resourceUriString + "red.png");
+                case TeamColor.Yellow:
+                    return new Uri(resourceUriString + "yellow.png");
                 case TeamColor.Neutral:
-                    return new Uri(resourceUriString + ".png");
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    return new Uri(resourceUriString + "neutral.png");
             }
         }
 

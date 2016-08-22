@@ -25,24 +25,24 @@ namespace PokemonGo_UWP.Entities
         private FortData _fortData;
 
         private DelegateCommand _trySearchPokestop;
-        private DelegateCommand _tryEnterGym;
 
         /// <summary>
         /// HACK - this should help updating pokestop icon on the map by binding to this
         /// </summary>
-        public FortDataStatus FortDataStatus {
+        public FortDataStatus FortDataStatus
+        {
             get
             {
                 var distance = GeoHelper.Distance(Geoposition, GameClient.Geoposition.Coordinate.Point);
                 FortDataStatus retVal = FortDataStatus.Opened;
 
                 if (distance > GameClient.GameSetting.FortSettings.InteractionRangeMeters)
-                    retVal =  FortDataStatus.Closed;
+                    retVal = FortDataStatus.Closed;
 
-                if(CooldownCompleteTimestampMs > DateTime.UtcNow.ToUnixTime())
+                if (CooldownCompleteTimestampMs > DateTime.UtcNow.ToUnixTime())
                     retVal |= FortDataStatus.Cooldown;
 
-                if(_fortData.ActiveFortModifier != null && _fortData.ActiveFortModifier.Contains(ItemId.ItemTroyDisk))
+                if (_fortData.ActiveFortModifier != null && _fortData.ActiveFortModifier.Contains(ItemId.ItemTroyDisk))
                     retVal |= FortDataStatus.Lure;
 
                 return retVal;
@@ -53,7 +53,7 @@ namespace PokemonGo_UWP.Entities
         {
             _fortData = fortData;
             Geoposition =
-                new Geopoint(new BasicGeoposition {Latitude = _fortData.Latitude, Longitude = _fortData.Longitude});
+                new Geopoint(new BasicGeoposition { Latitude = _fortData.Latitude, Longitude = _fortData.Longitude });
         }
 
         /// <summary>
@@ -76,20 +76,7 @@ namespace PokemonGo_UWP.Entities
             }, () => true)
             );
 
-        /// <summary>
-        ///     First implementation of entering the Gym.
-        /// </summary>
-        public DelegateCommand TryEnterGym => _tryEnterGym ?? (
-            _tryEnterGym = new DelegateCommand(() =>
-            {
-                NavigationHelper.NavigationState["CurrentGym"] = this;
-                // Disable map update
-                GameClient.ToggleUpdateTimer(false);
-                BootStrapper.Current.NavigationService.Navigate(typeof(EnterGymPage));
-            }, () => true)
-            );
-
-        public void Update(FortData update)
+        public virtual void Update(FortData update)
         {
             _fortData = update;
 
@@ -99,16 +86,11 @@ namespace PokemonGo_UWP.Entities
             OnPropertyChanged(nameof(ActiveFortModifier));
             OnPropertyChanged(nameof(CooldownCompleteTimestampMs));
             OnPropertyChanged(nameof(Enabled));
-            OnPropertyChanged(nameof(GuardPokemonId));
-            OnPropertyChanged(nameof(GymPoints));
-            OnPropertyChanged(nameof(IsInBattle));
             OnPropertyChanged(nameof(LastModifiedTimestampMs));
             OnPropertyChanged(nameof(LureInfo));
-            OnPropertyChanged(nameof(OwnedByTeam));
             OnPropertyChanged(nameof(RenderingType));
             OnPropertyChanged(nameof(Sponsor));
             OnPropertyChanged(nameof(Geoposition));
-            OnPropertyChanged(nameof(GuardPokemonCp));
             OnPropertyChanged(nameof(Latitude));
             OnPropertyChanged(nameof(Longitude));
         }
@@ -122,35 +104,23 @@ namespace PokemonGo_UWP.Entities
 
         #region Wrapped Properties
 
-        public FortType Type => _fortData.Type;
-
         public RepeatedField<POGOProtos.Inventory.Item.ItemId> ActiveFortModifier => _fortData.ActiveFortModifier;
 
         public long CooldownCompleteTimestampMs => _fortData.CooldownCompleteTimestampMs;
 
         public bool Enabled => _fortData.Enabled;
 
-        public PokemonId GuardPokemonId => _fortData.GuardPokemonId;
-
-        public long GymPoints => _fortData.GymPoints;
-
         public string Id => _fortData.Id;
-
-        public bool IsInBattle => _fortData.IsInBattle;
 
         public long LastModifiedTimestampMs => _fortData.LastModifiedTimestampMs;
 
         public FortLureInfo LureInfo => _fortData.LureInfo;
-
-        public TeamColor OwnedByTeam => _fortData.OwnedByTeam;
 
         public FortRenderingType RenderingType => _fortData.RenderingType;
 
         public FortSponsor Sponsor => _fortData.Sponsor;
 
         public Geopoint Geoposition { get; set; }
-
-        public int GuardPokemonCp => _fortData.GuardPokemonCp;
 
         public double Latitude => _fortData.Latitude;
 
@@ -166,6 +136,30 @@ namespace PokemonGo_UWP.Entities
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        #endregion
+    }
+
+    public class GymDataWrapper : FortDataWrapper
+    {
+        public GymDataWrapper(FortData fortData) : base(fortData)
+        {
+            _gymStatus = new GymDataStatus(fortData.GuardPokemonId, fortData.GuardPokemonCp, fortData.IsInBattle, fortData.OwnedByTeam, fortData.GymPoints);
+        }
+
+        public new void Update(FortData update)
+        {
+            base.Update(update);
+
+            this._gymStatus = new GymDataStatus(update.GuardPokemonId, update.GuardPokemonCp, update.IsInBattle, update.OwnedByTeam, update.GymPoints);
+
+            OnPropertyChanged(nameof(GymStatus));
+        }
+
+        private GymDataStatus _gymStatus;
+        #region Wrapped Properties
+
+        public GymDataStatus GymStatus => _gymStatus;
 
         #endregion
     }

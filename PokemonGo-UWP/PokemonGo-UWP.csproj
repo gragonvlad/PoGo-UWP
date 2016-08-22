@@ -219,6 +219,10 @@
     <Content Include="Assets\Icons\hint_gym_red.png" />
     <Content Include="Assets\Icons\hint_gym_yellow.png" />
     <Content Include="Assets\Icons\ic_candy_light.png" />
+    <Content Include="Assets\Icons\gym_blue.png" />
+    <Content Include="Assets\Icons\gym_neutral.png" />
+    <Content Include="Assets\Icons\gym_red.png" />
+    <Content Include="Assets\Icons\gym_yellow.png" />
     <Content Include="Assets\Icons\ic_combat.png" />
     <Content Include="Assets\Icons\ic_date.png" />
     <Content Include="Assets\Icons\ic_fav.png" />

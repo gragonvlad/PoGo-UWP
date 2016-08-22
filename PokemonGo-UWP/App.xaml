@@ -73,6 +73,7 @@
             <utils:AchievementDescriptionTranslationConverter x:Key="AchievementDescriptionTranslationConverter"/>
             <utils:PokemonPivotHeaderToVisibleConverter x:Key="PokemonPivotHeaderToVisibleConverter" />
             <utils:WidthConverter x:Key="WidthConverter" />
+            <utils:GymToIconConverter x:Key="GymToIconConverter" />
 
             <converters:ValueWhenConverter x:Key="VisibleWhenCanEvolveConverter">
                 <converters:ValueWhenConverter.When>

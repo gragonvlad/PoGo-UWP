@@ -294,18 +294,31 @@
                 </maps:MapItemsControl.ItemTemplate>
             </maps:MapItemsControl>
 
+
             <maps:MapItemsControl ItemsSource="{Binding NearbyGyms}">
                 <maps:MapItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="entities:FortDataWrapper">
-                        <Button Style="{ThemeResource ImageButtonStyle}"
-                                Command="{x:Bind TryEnterGym}">
-                            <Image
-                                Source="{Binding OwnedByTeam, Converter={StaticResource GymToIconConverter}}"
-                                maps:MapControl.Location="{Binding Geoposition}"
-                                maps:MapControl.NormalizedAnchorPoint="{Binding Anchor}"
-                                Stretch="Uniform"
-                                Height="{Binding ZoomLevel, ElementName=GameMapControl, Converter={StaticResource MapZoomLevelToIconSizeConverter}, ConverterParameter=4}"
-                                Width="{Binding ZoomLevel, ElementName=GameMapControl, Converter={StaticResource MapZoomLevelToIconSizeConverter}, ConverterParameter=4}" />
+                    <DataTemplate x:DataType="entities:GymDataWrapper">
+                        <Button Style="{ThemeResource ImageButtonStyle}">
+                            <Canvas
+                                    maps:MapControl.Location="{Binding Geoposition}"
+                                    maps:MapControl.NormalizedAnchorPoint="{Binding Anchor}">
+
+                                <Image 
+                                    Canvas.ZIndex="2"
+                                    Canvas.Top="20"
+                                    Canvas.Left="{Binding ZoomLevel, ElementName=GameMapControl, Converter={StaticResource MapZoomLevelToIconSizeConverter}, ConverterParameter=1.2}"
+                                    Source="{Binding GymStatus.GuardPokemonId, Converter={StaticResource PokemonIdToPokemonSpriteConverter}}" 
+                                    Stretch="Uniform"
+                                    Height="{Binding ZoomLevel, ElementName=GameMapControl, Converter={StaticResource MapZoomLevelToIconSizeConverter}, ConverterParameter=1.5}"
+                                    Width="{Binding ZoomLevel, ElementName=GameMapControl, Converter={StaticResource MapZoomLevelToIconSizeConverter}, ConverterParameter=1.5}"/>
+                                <Image
+                                    Canvas.ZIndex="1"
+                                    Canvas.Top="0"
+                                    Source="{Binding GymStatus, Converter={StaticResource GymToIconConverter}}"
+                                    Stretch="Uniform"
+                                    Height="{Binding ZoomLevel, ElementName=GameMapControl, Converter={StaticResource MapZoomLevelToIconSizeConverter}, ConverterParameter=4}"
+                                    Width="{Binding ZoomLevel, ElementName=GameMapControl, Converter={StaticResource MapZoomLevelToIconSizeConverter}, ConverterParameter=4}" />
+                            </Canvas>
                         </Button>
                     </DataTemplate>
                 </maps:MapItemsControl.ItemTemplate>

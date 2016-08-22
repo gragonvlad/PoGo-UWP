@@ -231,8 +231,8 @@ namespace PokemonGo_UWP.Utils
         /// <summary>
         ///     Collection of Gyms in the current area
         /// </summary>
-        public static ObservableCollection<FortDataWrapper> NearbyGyms { get; set; } =
-            new ObservableCollection<FortDataWrapper>();
+        public static ObservableCollection<GymDataWrapper> NearbyGyms { get; set; } =
+            new ObservableCollection<GymDataWrapper>();
 
         /// <summary>
         ///     Stores Items in the current inventory
@@ -479,6 +479,7 @@ namespace PokemonGo_UWP.Utils
                 _geolocator.PositionChanged -= GeolocatorOnPositionChanged;
             _geolocator = null;
             _lastGeopositionMapObjectsRequest = null;
+            NearbyGyms?.Clear();
         }
 
         #endregion
@@ -629,6 +630,12 @@ namespace PokemonGo_UWP.Utils
                 .ToArray();
             Logger.Write($"Found {newPokeStops.Length} nearby PokeStops");
             NearbyPokestops.UpdateWith(newPokeStops, x => new FortDataWrapper(x), (x, y) => x.Id == y.Id);
+
+            var newGyms = mapObjects.Item1.MapCells
+                .SelectMany(x => x.Forts)
+                .Where(x => x.Type == FortType.Gym).ToArray();
+            Logger.Write($"Found {newGyms.Length} nearby Gyms");
+            NearbyGyms.UpdateWith(newGyms, x => new GymDataWrapper(x), (x, y) => x.Id == y.Id);
 
             // update gyms on map
             var newGyms = mapObjects.Item1.MapCells
