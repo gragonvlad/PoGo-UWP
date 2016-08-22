@@ -298,7 +298,8 @@
             <maps:MapItemsControl ItemsSource="{Binding NearbyGyms}">
                 <maps:MapItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="entities:GymDataWrapper">
-                        <Button Style="{ThemeResource ImageButtonStyle}">
+                        <Button Style="{ThemeResource ImageButtonStyle}"
+                            Command="{x:Bind OpenGymDetails}">
                             <Canvas
                                     maps:MapControl.Location="{Binding Geoposition}"
                                     maps:MapControl.NormalizedAnchorPoint="{Binding Anchor}">

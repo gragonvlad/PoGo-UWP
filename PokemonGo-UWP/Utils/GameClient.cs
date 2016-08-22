@@ -1080,6 +1080,15 @@ namespace PokemonGo_UWP.Utils
 
         #endregion
 
+        #region Gym Handling
+
+        public static async Task<GetGymDetailsResponse> GetGym(string gymId, double latitude, double longitude)
+        {
+            return await _client.Fort.GetGymDetails(gymId, latitude, longitude);
+        }
+
+        #endregion
+
         #region Eggs Handling
 
         /// <summary>

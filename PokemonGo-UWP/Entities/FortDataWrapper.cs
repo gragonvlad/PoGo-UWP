@@ -142,6 +142,18 @@ namespace PokemonGo_UWP.Entities
 
     public class GymDataWrapper : FortDataWrapper
     {
+        private DelegateCommand _openGymDetails;
+
+        public DelegateCommand OpenGymDetails => _openGymDetails ?? (
+            _openGymDetails = new DelegateCommand(() =>
+                {
+                    NavigationHelper.NavigationState["CurrentGym"] = this;
+                    // Disable map update
+                    GameClient.ToggleUpdateTimer(false);
+                    BootStrapper.Current.NavigationService.Navigate(typeof(GymDetailsPage));
+                }, () => true)
+            );
+
         public GymDataWrapper(FortData fortData) : base(fortData)
         {
             _gymStatus = new GymDataStatus(fortData.GuardPokemonId, fortData.GuardPokemonCp, fortData.IsInBattle, fortData.OwnedByTeam, fortData.GymPoints);
