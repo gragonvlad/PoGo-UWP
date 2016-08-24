@@ -302,7 +302,9 @@
                             Command="{x:Bind OpenGymDetails}">
                             <Canvas
                                     maps:MapControl.Location="{Binding Geoposition}"
-                                    maps:MapControl.NormalizedAnchorPoint="{Binding Anchor}">
+                                    maps:MapControl.NormalizedAnchorPoint="{Binding Anchor}"
+                                    Height="{Binding ZoomLevel, ElementName=GameMapControl, Converter={StaticResource MapZoomLevelToIconSizeConverter}, ConverterParameter=4}"
+                                    Width="{Binding ZoomLevel, ElementName=GameMapControl, Converter={StaticResource MapZoomLevelToIconSizeConverter}, ConverterParameter=4}">
 
                                 <Image 
                                     Canvas.ZIndex="2"
