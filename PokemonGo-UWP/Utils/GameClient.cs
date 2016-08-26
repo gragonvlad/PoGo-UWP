@@ -631,17 +631,18 @@ namespace PokemonGo_UWP.Utils
             Logger.Write($"Found {newPokeStops.Length} nearby PokeStops");
             NearbyPokestops.UpdateWith(newPokeStops, x => new FortDataWrapper(x), (x, y) => x.Id == y.Id);
 
+            // update gyms on map
             var newGyms = mapObjects.Item1.MapCells
                 .SelectMany(x => x.Forts)
                 .Where(x => x.Type == FortType.Gym).ToArray();
             Logger.Write($"Found {newGyms.Length} nearby Gyms");
             NearbyGyms.UpdateWith(newGyms, x => new GymDataWrapper(x), (x, y) => x.Id == y.Id);
 
-            // update gyms on map
-            var newGyms = mapObjects.Item1.MapCells
-                .SelectMany(x => x.Forts)
-                .Where(x => x.Type == FortType.Gym)
-                .ToArray();
+            
+            //var newGyms = mapObjects.Item1.MapCells
+            //    .SelectMany(x => x.Forts)
+            //    .Where(x => x.Type == FortType.Gym)
+            //    .ToArray();
             Logger.Write($"Found {newGyms.Length} nearby Gyms");
             // For now, we do not show the gyms on the map, as they are not complete yet. Code remains, so we can still work on it.
             //NearbyGyms.UpdateWith(newGyms, x => new FortDataWrapper(x), (x, y) => x.Id == y.Id);

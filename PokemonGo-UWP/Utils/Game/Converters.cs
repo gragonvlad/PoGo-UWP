@@ -732,7 +732,7 @@ namespace PokemonGo_UWP.Utils
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             var itemId = (value as ItemAward)?.ItemId ?? ((value as ItemData)?.ItemId ?? ((ItemDataWrapper)value).ItemId);
-            switch(itemId)
+            switch (itemId)
             {
                 case ItemId.ItemUnknown:
                 case ItemId.ItemSpecialCamera:
@@ -771,7 +771,7 @@ namespace PokemonGo_UWP.Utils
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (!(value is ItemDataWrapper)) return 1;
-            
+
             var useableList = CurrentViewMode == ViewModels.ItemsInventoryPageViewModel.ItemsInventoryViewMode.Normal ? GameClient.NormalUseItemIds : GameClient.CatchItemIds;
             return useableList.Contains(((ItemDataWrapper)value).ItemId) ? 1 : 0.5;
         }
@@ -1527,6 +1527,40 @@ namespace PokemonGo_UWP.Utils
             {
                 return Visibility.Visible;
             }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+    }
+
+    public class GymPointsToLevelConverter : IValueConverter
+    {
+        #region Implementation of IValueConverter
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            var gymPoints = (Int64)value;
+            var gymLevel = 0;
+
+            //Level 1 Gyms start out with 0 XP.A Gym will be at Level 1 until it reaches 500 XP.
+            if (gymPoints >= 0 && gymPoints < 499)
+                gymLevel = 1;
+            //Level 2 Gyms require 500 - 999 XP and provide two total slots to for defending Pokemon.
+            else if (gymPoints >= 500 && gymPoints < 999)
+                gymLevel = 2;
+            //Level 3 Gyms require 1, 000 XP - 1, 999 XP and provide three total slots for defending Pokemon. Adding a third Pokemon will increase that Gym's XP from 1,000 XP to 1,500 XP.
+            //Level 4 Gyms require 2, 000 XP - 2, 999 XP and provide four total slots for defending Pokemon.  Gym level progression continues to work the same way as higher levels are reached
+            else if (gymPoints >= 1000)
+            {
+                //this logic is a little weird maybe, but this way it can scale far up, we need to modify this code again if the ranges change
+                gymLevel = 2;
+                gymLevel += (int)gymPoints / 1000;
+            }
+
+
+            return $"Gym level {gymLevel}";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

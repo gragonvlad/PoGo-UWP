@@ -31,7 +31,7 @@ namespace PokemonGo_UWP.Utils.Game
 
         public int GuardPokemonCp => _guardPokemonCp;
 
-        public bool IsInBattle => IsInBattle;
+        public bool IsInBattle => _isInBattle;
 
         public TeamColor OwnedByTeam => _ownedByTeam;
 

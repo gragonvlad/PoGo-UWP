@@ -1022,6 +1022,14 @@
         <Setter Property="CornerRadius" Value="5" />
     </Style>
 
+    <Style x:Key="GymInfoGridContainer" TargetType="Grid">
+        <Setter Property="Background" Value="#33000000" />
+        <Setter Property="BorderBrush" Value="#fff" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="Margin" Value="15,5,0,5" />
+        <Setter Property="CornerRadius" Value="20" />
+    </Style>
+
     <!-- STYLE - END -->
 
     <!-- STYLE - TEXT -->
@@ -1071,18 +1079,18 @@
     </Style>
 
     <Style x:Key="TextGymTitle" TargetType="TextBlock">
-        <Setter Property="Foreground" Value="#000000" />
-        <Setter Property="FontSize" Value="20" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
+        <Setter Property="FontSize" Value="13" />
         <Setter Property="VerticalAlignment" Value="Top" />
-        <Setter Property="Margin" Value="15" />
+        <Setter Property="Margin" Value="0,5,0,0" />
         <Setter Property="TextWrapping" Value="WrapWholeWords" />
     </Style>
 
     <Style x:Key="TextGymStrength" TargetType="TextBlock">
-        <Setter Property="Foreground" Value="#000000" />
-        <Setter Property="FontSize" Value="30" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
+        <Setter Property="FontSize" Value="20" />
         <Setter Property="VerticalAlignment" Value="Top" />
-        <Setter Property="Margin" Value="15" />
+        <Setter Property="Margin" Value="0,5,0,0" />
         <Setter Property="TextWrapping" Value="WrapWholeWords" />
     </Style>
 

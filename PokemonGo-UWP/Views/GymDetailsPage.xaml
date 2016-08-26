@@ -19,13 +19,14 @@
 
     <Grid>
         <Grid.Background>
-            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                <GradientStop Color="#4ab583" Offset="0" />
-                <GradientStop Color="#266378" Offset="0.8" />
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#00dffc" Offset="0" />
+                <GradientStop Color="#343838" Offset="0.7" />
             </LinearGradientBrush>
         </Grid.Background>
         <Grid.RowDefinitions>
-            <RowDefinition Height="75" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="125" />
             <RowDefinition Height="*" />
             <RowDefinition Height="75" />
         </Grid.RowDefinitions>
@@ -44,17 +45,47 @@
 
             </StackPanel>
         </Border>
-        <Grid Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="125" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0" Style="{StaticResource GridContainer}">
-                <TextBlock Text="{Binding CurrentGymInfo.Name}"
-                           Style="{StaticResource TextPokestopTitle}" />
+        <Grid  Grid.Row="1" Height="95" HorizontalAlignment="Stretch" Margin="5,0,5,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="95"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0"
+                    Background="#fff"
+                    BorderBrush="#fff"
+                    BorderThickness="2"
+                    CornerRadius="150">
+                <Ellipse Width="88"
+                         Height="88">
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource="{Binding CurrentGymInfo.Urls[0]}" Stretch="UniformToFill" />
+                    </Ellipse.Fill>
+                </Ellipse>
+            </Border>
+
+            <Grid Grid.ColumnSpan="2" Height="80" Padding="90,0,0,0" Style="{StaticResource GymInfoGridContainer}" Canvas.ZIndex="-1" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="{Binding CurrentGymInfo.Name}"
+                           Style="{StaticResource TextGymTitle}" Margin="0,7,0,0" />
+                <TextBlock Grid.Row="1" Text="{Binding CurrentGymInfo.GymState.FortData.GymPoints, Converter={StaticResource GymPointsToLevelConverter}}"
+                           Style="{StaticResource TextGymStrength}" Margin="0" />
+                <ItemsControl Grid.Row="2" ItemsSource="{Binding GymSlots}"> <!-- some item template selector needed here -->
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Ellipse Width="5" Height="5" Fill="White" Margin="0,0,2,0"></Ellipse>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
             </Grid>
-
-
         </Grid>
 
         <Button Grid.Row="2"
