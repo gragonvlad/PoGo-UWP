@@ -1538,26 +1538,18 @@ namespace PokemonGo_UWP.Utils
 
     public class GymPointsToLevelConverter : IValueConverter
     {
+		private readonly int[] _prestigeTable = { 2000, 4000, 8000, 12000, 16000, 20000, 30000, 40000, 50000 };
+		
         #region Implementation of IValueConverter
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             var gymPoints = (Int64)value;
-            var gymLevel = 0;
-
-            //Level 1 Gyms start out with 0 XP.A Gym will be at Level 1 until it reaches 500 XP.
-            if (gymPoints >= 0 && gymPoints < 499)
-                gymLevel = 1;
-            //Level 2 Gyms require 500 - 999 XP and provide two total slots to for defending Pokemon.
-            else if (gymPoints >= 500 && gymPoints < 999)
-                gymLevel = 2;
-            //Level 3 Gyms require 1, 000 XP - 1, 999 XP and provide three total slots for defending Pokemon. Adding a third Pokemon will increase that Gym's XP from 1,000 XP to 1,500 XP.
-            //Level 4 Gyms require 2, 000 XP - 2, 999 XP and provide four total slots for defending Pokemon.  Gym level progression continues to work the same way as higher levels are reached
-            else if (gymPoints >= 1000)
-            {
-                //this logic is a little weird maybe, but this way it can scale far up, we need to modify this code again if the ranges change
-                gymLevel = 2;
-                gymLevel += (int)gymPoints / 1000;
-            }
+            
+			var gymLevel = 1;
+			while (gymPoints >= _prestigeTable[gymLevel - 1)
+			{
+				gymLevel++;
+			}
 
 
             return $"Gym level {gymLevel}";
